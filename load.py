@@ -69,11 +69,6 @@ if __name__ =="__main__":
             spc.iloc[0] = spc.iloc[0]+"_d"     
             spc.to_csv(f"./data/{opt.path[:-4]}/{spc[0]}.txt", index=False,header=None, sep='\t')
 
-            # 2 column txt data
-            # if(addRs==True):
-            #     spcRs = rs
-            #     spcRs[spc[0]]= spc
-            #     spcRs.to_csv(f"./data/{opt.path[:-4]}/{spc[0]}_qc.txt", index=False,header=None, sep='\t')
         elif(i%3 ==0): # raw data
             if(opt.OmitRaw ==True):
                 continue
@@ -84,11 +79,6 @@ if __name__ =="__main__":
             spc.iloc[0] = spc.iloc[0]+"_r"    
             spc.to_csv(f"./data/{opt.path[:-4]}/{spc[0]}.txt", index=False,header=None, sep='\t')
 
-            # if(addRs==True):
-            #     spcRs = rs
-            #     spcRs[spc[0]]= spc
-            #     spcRs.to_csv(f"./data/{opt.path[:-4]}/{spc[0]}_qc.txt", index=False,header=None, sep='\t')
-        
         print(f"*   {spc[0]}.txt")
 
     print("**  =====")
