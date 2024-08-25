@@ -10,7 +10,10 @@ Procedure
 3. place the CSV file in data directory
 4. Run load.py as follows: python load.py (name of CSV file).csv
 5. Add options if necessary
+
    -od: omit extracting dark reference spectra
+
    -or: omit extracting raw spectra
+
    -ir: include Raman shift in the data of processed file
 7. Extracted spectra are stored in the directory of the same name as CSV file
