@@ -19,10 +19,12 @@ if __name__ =="__main__":
     parser.add_argument("-or","--OmitRaw", help="select if to omit the raw spectrum for each data.",action ="store_true")
     # for 1064 database use
     parser.add_argument("-ir","--IncRs", help="select if to include Raman shift column.",action ="store_true")
-
     parser.add_argument("path", type=str, help="write the full name of the CSV file")
 
     opt =parser.parse_args()
+
+    addRs = opt.IncRs # whether to add rs column
+
     if(os.path.isfile(f"./data/{opt.path}") is False):
         print("*** No such CSV file in ./data/ directory. write the target CSV file name")
         sys.exit()
@@ -49,28 +51,47 @@ if __name__ =="__main__":
             spc = df.iloc[0:,i]
             spc = spc.drop(spc.index[1])
             spc.to_csv(f"./data/{opt.path[:-4]}/{spc[0]}.txt", index=False,header=None, sep='\t')
-        
+
+            #2 column txt data
+            if(addRs==True):
+                tmpRs = rs.reset_index(drop=True)
+                tmpSpc = spc.reset_index(drop=True)
+                spcRs = pd.concat([tmpRs,tmpSpc],axis=1)
+                spcRs.to_csv(f"./data/{opt.path[:-4]}/{spc[0]}_qc.txt", index=False,header=None, sep='\t')  
+
         elif(i%3 ==1): # dark
             if(opt.OmitDark ==True):
                 continue
+
             spc = df.iloc[0:,i-2]
             spc = spc.drop(spc.index[1])
             spc.iloc[1:] = df.iloc[2:,i] 
             spc.iloc[0] = spc.iloc[0]+"_d"     
             spc.to_csv(f"./data/{opt.path[:-4]}/{spc[0]}.txt", index=False,header=None, sep='\t')
 
+            # 2 column txt data
+            # if(addRs==True):
+            #     spcRs = rs
+            #     spcRs[spc[0]]= spc
+            #     spcRs.to_csv(f"./data/{opt.path[:-4]}/{spc[0]}_qc.txt", index=False,header=None, sep='\t')
         elif(i%3 ==0): # raw data
             if(opt.OmitRaw ==True):
                 continue
+
             spc = df.iloc[0:,i-1]
             spc = spc.drop(spc.index[1])
             spc.iloc[1:] = df.iloc[2:,i]    
             spc.iloc[0] = spc.iloc[0]+"_r"    
             spc.to_csv(f"./data/{opt.path[:-4]}/{spc[0]}.txt", index=False,header=None, sep='\t')
+
+            # if(addRs==True):
+            #     spcRs = rs
+            #     spcRs[spc[0]]= spc
+            #     spcRs.to_csv(f"./data/{opt.path[:-4]}/{spc[0]}_qc.txt", index=False,header=None, sep='\t')
         
         print(f"*   {spc[0]}.txt")
 
     print("**  =====")
     print("*** extraction completed")
 
-
+print(spcRs)
